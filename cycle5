@@ -1,0 +1,147 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct node{
+	struct node*left;
+	struct node*right;
+	int data;
+};
+struct node*insert(struct node* root,int value){
+	if (root==NULL){
+		struct node*newnode=malloc(sizeof (struct node));
+		newnode->data=value;
+		newnode->left=NULL;
+		newnode->right=NULL;
+		return newnode;
+}
+	else if(value==root->data){
+		printf("same data can't be stored \n");
+		}
+	else if(value>root->data){
+		root->right=insert(root->right,value);
+		}
+	else{
+		root->left=insert(root->left,value);
+	}
+return root;
+}
+void inordertraversal(struct node*root){
+	if(root==NULL)
+	return;
+	inordertraversal(root->left);
+	printf("%d ->",root->data);
+	inordertraversal(root->right);
+	}
+void preordertraversal(struct node*root){
+	if(root==NULL)
+	return;
+	printf("%d ->",root->data);
+	preordertraversal(root->left);
+	preordertraversal(root->right);
+	}
+void postordertraversal(struct node*root){
+	if (root==NULL)
+	return;
+	postordertraversal(root->left);
+	postordertraversal(root->right);
+	printf("%d ->",root->data);
+	}
+struct node*search(struct node*root,int key){
+	if(root==NULL){
+	printf("\n not found \n");
+	return 	NULL;}
+	else if(root->data==key){
+	printf("\n not found \n");
+	return root;}
+	else if(key>root->data)
+	{return search(root->right,key);
+	}else{
+	return search(root->left,key);
+	}
+}
+struct node*minvaluenode(struct node*node){
+	struct node*current=node;
+	while(current && current->left!=NULL)
+	current=current->left;
+	return current;
+	}
+struct node*deletenode(struct node*root,int key){
+	if(root==NULL)
+	return root;
+	if(key<root->data)
+	root->left=deletenode(root->left,key);
+	else if(key>root->data)
+	root->right=deletenode(root->right,key);
+	else{
+	if (root->left==NULL){
+	struct node*temp=root->right;
+	free(root);
+	return temp;
+	}
+	else if(root->right==NULL){
+	struct node*temp=root->left;
+	free(root);
+	return temp;
+	}
+	struct node*temp=minvaluenode(root->right);
+	root->data=temp->data;
+	root->right=deletenode(root->right,temp->data);
+	}
+	return root;
+	}
+void display(struct node*root){
+	if(root==NULL){
+	printf("/n tree is empty \n");	return;
+	}
+	inordertraversal(root);
+	printf("\n");
+	}
+int main(){
+	struct node*root=NULL;
+ 	int opt,value,searchv,key;
+	do{
+		printf("Choose option:\n1)Insert node \n2)Search \n3)Inorder traversal \n4)Preorder traversal \n5)Postorder traversal \n6)Delete \n7)Display \n8)Exit \n0");
+	scanf("%d",&opt);
+	switch(opt){
+		case 1:
+			printf("\n Enter a number:");
+			scanf("%d",&value);
+			root=insert(root,value);
+			break;
+		case 2:
+			printf("\n Enter a number to search:");
+			scanf("%d",&searchv);
+			search(root,searchv);
+			break;
+		case 3:
+			printf("\n Inorder Traversal:");
+			inordertraversal(root);
+			printf("\n");
+			break;
+		case 4:
+			printf("\n Preorder Traversal:");
+			preordertraversal(root);
+			printf("\n");
+			break;
+		case 5:
+			printf("\n Postorder Traversal:");
+			postordertraversal(root);
+			printf("\n");
+			break;
+		case 6:
+			printf("\n Enter a number to delete:");
+			scanf("%d",&key);
+			root=deletenode(root,key);
+			break;
+		case 7:
+			printf("\n Display");
+			display(root);
+			break;
+		case 8:
+			printf("\n Exiting...");
+			break;
+		default:
+			printf("Invalid option \n");}
+	}while(opt!=8);
+	return 0;
+}
+
